@@ -9,7 +9,7 @@
 
 # Jonnitto.GoogleMaps Package for Neos CMS
 
-With this package you can include Google Maps and / or Streetview in a simple way into [Neos CMS](https://www.neos.io). Contributions are very welcome!
+With this package you can include Google Maps and / or Streetview and even Static Maps in a simple way into [Neos CMS](https://www.neos.io). Contributions are very welcome!
 
 ## Installation
 
@@ -20,6 +20,78 @@ composer require jonnitto/googlemaps --no-update
 ```
 
 The --no-update command prevent the automatic update of the dependencies. After the package was added to your theme composer.json, go back to the root of the Neos installation and run composer update. Et voilà! Your desired package is now installed correctly.
+
+## Modification
+
+* To set the options, use the global variable `GoogleMapsOptions`
+* To set the marker pin, use the global variable `GoogleMapsPin`
+* To include functions, use `GoogleMapsFunction`
+
+In the Javscript of the package, following code gets executed:
+
+```js
+
+if (typeof GoogleMapsPin === "string") {
+    marker.icon = GoogleMapsPin;
+} else if (typeof GoogleMapsPin === "object") {
+    extend(marker, GoogleMapsPin);
+}
+        
+if (typeof GoogleMapsFunction === "function") {
+    GoogleMapsFunction();
+}
+
+if (typeof GoogleMapsOptions === "object") {
+    extend(object.Map.options, GoogleMapsOptions);
+}
+
+if (typeof GoogleStreetviewOptions === "object") {
+    extend(object.Streetview.options, GoogleStreetviewOptions);
+}
+```
+
+Like that, you can do almost everything with the map. 
+
+### Example: Custom pin
+
+```js
+window.GoogleMapsFunction () => {
+    window.GoogleMapsPin = {
+        icon: {
+            url: '/YOUR/PATH/TO/THE/MapPin.png',
+            anchor: new google.maps.Point(10, 50),
+            scaledSize: new google.maps.Size(22, 40)
+        }
+    };
+}
+```
+
+or
+
+```js
+window.GoogleMapsPin = '/YOUR/PATH/TO/THE/MapPin.png';
+```
+
+### Example: Custom map options
+
+```js
+window.GoogleMapsOptions = {
+    streetViewControl: false,
+    mapTypeControl: false,
+    scrollwheel: false,
+    styles: [
+        {
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#f5f5f5"
+                }
+            ]
+        }
+    ]
+};
+```
+
 
 ## License
 
